@@ -1,5 +1,5 @@
 <?php
-// Database configuration for COVID-19 Management System
+// Database configuration for COVID-19 Management System - User Panel
 class Database {
     private $host = "localhost";
     private $db_name = "covid19";
@@ -30,7 +30,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
 // Helper functions
 function isLoggedIn() {
-    return isset($_SESSION['admin_id']) && isset($_SESSION['admin_role']) && $_SESSION['admin_role'] === 'admin';
+    return isset($_SESSION['user_id']) && isset($_SESSION['user_role']);
 }
 
 function requireLogin() {
@@ -40,9 +40,29 @@ function requireLogin() {
     }
 }
 
+function requireRole($role) {
+    requireLogin();
+    if ($_SESSION['user_role'] !== $role) {
+        header("Location: dashboard.php");
+        exit();
+    }
+}
+
 function logout() {
     session_destroy();
     header("Location: login.php");
     exit();
+}
+
+function getUserRole() {
+    return isset($_SESSION['user_role']) ? $_SESSION['user_role'] : null;
+}
+
+function getUserId() {
+    return isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+}
+
+function getUserName() {
+    return isset($_SESSION['user_name']) ? $_SESSION['user_name'] : null;
 }
 ?>
